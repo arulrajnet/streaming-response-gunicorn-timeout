@@ -1,0 +1,4 @@
+flask==2.3.3
+werkzeug==2.3.8
+gunicorn==22.0.0
+gevent==24.2.1

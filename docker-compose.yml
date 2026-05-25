@@ -1,0 +1,14 @@
+services:
+  stream:
+    build: .
+    image: arulrajnet/streaming-response-gunicorn-timeout:latest
+    container_name: stream-repro
+    ports:
+      - "5001:5001"
+    environment:
+      PORT: "5001"
+      GUNICORN_WORKERS: "2"
+      STREAM_DURATION_SEC: "40"
+      STREAM_INTERVAL_SEC: "0.5"
+      CHUNK_SIZE_BYTES: "1024"
+    restart: unless-stopped

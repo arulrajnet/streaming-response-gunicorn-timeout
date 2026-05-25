@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Gunicorn streaming response timeout reproducer</title>
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+               margin: 2rem auto; max-width: 720px; line-height: 1.5; color: #222; }
+        code { background: #f3f3f3; padding: 0.1rem 0.3rem; border-radius: 3px; }
+        .card { border: 1px solid #ddd; border-radius: 6px; padding: 1rem 1.25rem;
+                background: #fafafa; }
+        a.btn { display: inline-block; padding: 0.6rem 1rem; background: #2563eb;
+                color: #fff; text-decoration: none; border-radius: 4px; }
+        a.btn:hover { background: #1d4ed8; }
+        ul { padding-left: 1.25rem; }
+    </style>
+</head>
+<body>
+    <h1>Gunicorn streaming response timeout reproducer</h1>
+
+    <div class="card">
+        <p><strong>Setup</strong></p>
+        <ul>
+            <li>Worker class: <code>gevent</code></li>
+            <li>Gunicorn <code>timeout</code>: <strong>30 s</strong></li>
+            <li>Stream duration: <strong>{{ duration }} s</strong> (timeout + 10 s)</li>
+            <li>Yield interval: <strong>{{ interval }} s</strong></li>
+            <li>Chunk size: <strong>{{ chunk_size }} bytes</strong></li>
+            <li>Response <code>Content-Type</code>: <code>application/octet-stream</code></li>
+        </ul>
+    </div>
+
+    <p>
+        Click the button below. The link uses <code>target="_blank"</code> so the
+        browser handles it as a download.
+    </p>
+
+    <p>
+        <a class="btn" href="/stream" target="_blank" rel="noopener">
+            Start streaming download
+        </a>
+    </p>
+
+    <p>
+        Watch the server logs (<code>docker compose logs -f</code>) and observe
+        whether the worker survives past the 30 s gunicorn timeout while still
+        actively yielding bytes. If gunicorn kills the worker mid-stream the
+        download will end short of <strong>{{ duration }} s</strong>.
+    </p>
+</body>
+</html>
